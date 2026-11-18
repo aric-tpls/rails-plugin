@@ -72,7 +72,10 @@ create_file in_root("docs/superpowers/plans/.keep"), ""
 #    /up route, so add it for `just up` verification.
 append_to_file in_root("test/dummy/config/routes.rb") do
   <<~RUBY
-    # Reveal health status on /up (200 if the app boots, otherwise 500).
-    get "up" => "rails/health#show", as: :rails_health_check
+
+    Rails.application.routes.draw do
+      # Reveal health status on /up (200 if the app boots, otherwise 500).
+      get "up" => "rails/health#show", as: :rails_health_check
+    end
   RUBY
 end
