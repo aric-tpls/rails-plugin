@@ -35,8 +35,6 @@ COPY Gemfile Gemfile.lock ${GEMSPEC_NAME} ./
 COPY ${VERSION_PATH} ${VERSION_PATH}
 RUN bundle config --global mirror.https://rubygems.org ${GEM_MIRROR} && \
     bundle install
-RUN bundle config --global mirror.https://rubygems.org ${GEM_MIRROR} && \
-    bundle install
 
 COPY . .
 
