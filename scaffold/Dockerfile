@@ -26,8 +26,10 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 ARG GEM_MIRROR=https://mirrors.aliyun.com/rubygems/
-COPY Gemfile Gemfile.lock ./
+COPY Gemfile Gemfile.lock demo_plugin.gemspec ./
+COPY lib/demo_plugin/version.rb lib/demo_plugin/version.rb
 RUN bundle config --global mirror.https://rubygems.org ${GEM_MIRROR} && \
+    bundle lock --update regexp_parser && \
     bundle install
 
 COPY . .
