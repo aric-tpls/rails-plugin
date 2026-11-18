@@ -5,6 +5,8 @@ services:
       target: development
       args:
         - BASE_IMAGE=m.daocloud.io/docker.io/library/ruby:4.0.9-slim
+        - GEMSPEC_NAME=${GEMSPEC_NAME:-demo_plugin.gemspec}
+        - VERSION_PATH=${VERSION_PATH:-lib/demo_plugin/version.rb}
     command: sh -c "rm -f test/dummy/tmp/pids/server.pid && (bundle check || bundle install) && cd test/dummy && bin/rails server -b 0.0.0.0"
     volumes:
       - .:/plugin

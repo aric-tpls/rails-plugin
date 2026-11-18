@@ -20,6 +20,17 @@ copy_file "#{scaffold}/bin/ci", in_root("bin/ci")
 chmod in_root("bin/ci"), 0o755
 copy_file "#{scaffold}/.ruby-version", in_root(".ruby-version")
 
+# Pass the plugin-specific gemspec/version paths to the dev Dockerfile build
+# so its bundle-install layer works for any plugin name.
+dockerfile = File.read(in_root("Dockerfile"))
+  .gsub("demo_plugin.gemspec", "#{plugin_name}.gemspec")
+  .gsub("lib/demo_plugin/version.rb", "lib/#{plugin_name}/version.rb")
+compose = File.read(in_root("docker-compose.dev.yml"))
+  .gsub("demo_plugin.gemspec", "#{plugin_name}.gemspec")
+  .gsub("lib/demo_plugin/version.rb", "lib/#{plugin_name}/version.rb")
+create_file in_root("Dockerfile"), dockerfile
+create_file in_root("docker-compose.dev.yml"), compose
+
 # Append ignore rules to the generated .gitignore
 append_to_file in_root(".gitignore") do
   File.read("#{scaffold}/.gitignore")

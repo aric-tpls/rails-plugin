@@ -26,8 +26,15 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 ARG GEM_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/rubygems/
-COPY Gemfile Gemfile.lock demo_plugin.gemspec ./
-COPY lib/demo_plugin/version.rb lib/demo_plugin/version.rb
+# bundle install needs the local gemspec (and its version file) to resolve
+# the `gemspec` dependency. The gemspec name varies with the plugin name,
+# so a build-arg carries it from the template instead of hardcoding.
+ARG GEMSPEC_NAME=demo_plugin.gemspec
+ARG VERSION_PATH=lib/demo_plugin/version.rb
+COPY Gemfile Gemfile.lock ${GEMSPEC_NAME} ./
+COPY ${VERSION_PATH} ${VERSION_PATH}
+RUN bundle config --global mirror.https://rubygems.org ${GEM_MIRROR} && \
+    bundle install
 RUN bundle config --global mirror.https://rubygems.org ${GEM_MIRROR} && \
     bundle install
 
