@@ -11,15 +11,18 @@ new:
     #!/usr/bin/env bash
     set -euo pipefail
     target="$PWD"
+    name="$(basename "$target")"
     if [ -n "$(ls -A "$target" | grep -v '^\.git$')" ]; then
       echo "Error: target directory is not empty: $target" >&2
       exit 1
     fi
     exec docker run --rm -it \
+      -e "PLUGIN_ROOT=/work/$name" \
       -v "{{justfile_directory()}}:/template:ro" \
-      -v "$target:/output" \
+      -v "$target:/work/$name" \
+      -w "/work/$name" \
       rails-plugin-generator \
-      rails plugin new /output --mountable --skip-bundle -m /template/template.rb
+      rails plugin new "/work/$name" --mountable --skip-bundle -m /template/template.rb
 
 # Shell into the generator image (for debugging)
 sh:
