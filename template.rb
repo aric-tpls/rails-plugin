@@ -27,7 +27,7 @@ create_file "README.md", readme
 
 # 2. Gemfile: dummy app needs sqlite3; lock without installing
 gem "sqlite3", ">= 2.1"
-bundle_lock
+run "bundle lock"
 
 # 3. Example helper + test
 create_file "app/helpers/#{plugin_name}/example_helper.rb", <<~RUBY
