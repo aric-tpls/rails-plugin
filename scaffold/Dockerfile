@@ -25,11 +25,10 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential git libyaml-dev pkg-config && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-ARG GEM_MIRROR=https://mirrors.aliyun.com/rubygems/
+ARG GEM_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/rubygems/
 COPY Gemfile Gemfile.lock demo_plugin.gemspec ./
 COPY lib/demo_plugin/version.rb lib/demo_plugin/version.rb
 RUN bundle config --global mirror.https://rubygems.org ${GEM_MIRROR} && \
-    bundle lock --update regexp_parser && \
     bundle install
 
 COPY . .
