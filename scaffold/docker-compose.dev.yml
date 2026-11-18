@@ -1,0 +1,20 @@
+services:
+  web:
+    build:
+      context: .
+      target: development
+      args:
+        - BASE_IMAGE=m.daocloud.io/docker.io/library/ruby:4.0.9-slim
+    command: sh -c "rm -f test/dummy/tmp/pids/server.pid && (bundle check || bundle install) && cd test/dummy && bin/rails server -b 0.0.0.0"
+    volumes:
+      - .:/plugin
+      - bundle_cache:/usr/local/bundle
+    ports:
+      - "${PORT:-3000}:3000"
+    stdin_open: true
+    tty: true
+    environment:
+      - RAILS_ENV=development
+
+volumes:
+  bundle_cache:

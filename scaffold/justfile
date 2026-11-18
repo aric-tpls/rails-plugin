@@ -1,0 +1,38 @@
+_default:
+    @just --list
+
+# Start dummy app server, e.g. just up / just up -d
+up *flags:
+    docker compose -f docker-compose.dev.yml up --build {{flags}}
+
+# Rebuild dev image after Gemfile changes
+build:
+    docker compose -f docker-compose.dev.yml build
+
+# Stop dev environment
+down:
+    docker compose -f docker-compose.dev.yml down
+
+# Run the engine test suite
+test:
+    docker compose -f docker-compose.dev.yml run --rm -e RAILS_ENV=test web bash -c "cd test/dummy && bin/rails db:prepare && cd ../.. && bundle exec rake test"
+
+# Run CI checks
+ci:
+    docker compose -f docker-compose.dev.yml run --rm web ./bin/ci
+
+# Rails console against the dummy app
+console:
+    docker compose -f docker-compose.dev.yml exec web bash -c "cd test/dummy && bin/rails console"
+
+# Shell into container
+sh:
+    docker compose -f docker-compose.dev.yml exec web bash
+
+# Run rails/rake task against dummy app, e.g. just rake 'db:prepare'
+rake *args:
+    docker compose -f docker-compose.dev.yml exec web bash -c "cd test/dummy && bin/rails '{{args}}'"
+
+# Tail logs
+logs:
+    docker compose -f docker-compose.dev.yml logs -f web
