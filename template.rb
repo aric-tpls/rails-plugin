@@ -43,7 +43,7 @@ create_file in_root("app/helpers/#{plugin_name}/example_helper.rb"), <<~RUBY
   module #{module_name}
     module ExampleHelper
       def example_greeting(name = "world")
-        "Hello, #{name}!"
+        "Hello, \#{name}!"
       end
     end
   end
